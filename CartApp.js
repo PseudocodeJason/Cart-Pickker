@@ -1,9 +1,9 @@
 import { Text, View, StyleSheet, TextInput, Button, StatusBar, SafeAreaView, FlatList } from "react-native";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { connect } from "react-redux";
-import { AddItem, RemoveItem, ModifyItem } from './redux/actions/index'
+import { AddItem, RemoveItem, ModifyItem, ShowApi, HideApi } from './redux/actions/index'
 
-function App({ itemList, AddItem, RemoveItem, ModifyItem }) {
+function App({ itemList, AddItem, RemoveItem, ModifyItem, ShowApi, HideApi, apiList }) {
   const [item, setItem] = useState('')
   const [price, setPrice] = useState('')
 
@@ -16,10 +16,30 @@ function App({ itemList, AddItem, RemoveItem, ModifyItem }) {
     );
   };
 
+
+  // API Things
+  const Entry= ({item})=>{
+    return <View style={styles.item}>
+    <Text>{item.Nation}</Text>
+    <Text>{item.Year}</Text>
+    <Text>{item.Population}</Text>
+    
+    </View>
+  }
+
+  const [data, setData] = useState([]);
+  useEffect(() => {
+    fetch('https://datausa.io/api/data?drilldowns=Nation&measures=Population')
+      .then((res) => res.json())
+      .then((json) => setData(json.data));
+  }, []);
+
   return (
     
     <SafeAreaView>
       <View style={styles.container}>
+          <Button title="Show API" onPress={() => ShowApi(data)} />
+          <Button title="Hide API" onPress={() => HideApi()}/>
         <View >
           <Text >Item Name:</Text>
           <TextInput
@@ -39,6 +59,7 @@ function App({ itemList, AddItem, RemoveItem, ModifyItem }) {
         </View>
         <View style={styles.sep} />
         <FlatList data={itemList} renderItem={ListRender}/>
+        <FlatList data={apiList} renderItem={Entry} />
       </View>
     </SafeAreaView>
 
@@ -73,6 +94,6 @@ const styles = StyleSheet.create({
   },
 });
 
-const mapDispatch = { AddItem, RemoveItem, ModifyItem };
-const mapState = (state) => ({ itemList: state.cart.itemList })
+const mapDispatch = { AddItem, RemoveItem, ModifyItem, ShowApi, HideApi };
+const mapState = (state) => ({ itemList: state.cart.itemList, apiList: state.api.apiList })
 export default connect(mapState, mapDispatch)(App);
