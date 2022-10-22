@@ -23,8 +23,9 @@ export default(state = initial_state, action) => {
           };
     }else if (action.type == MODIFY_ITEM){
         console.log(JSON.stringify(action))
-        var index = state.itemList.findIndex(item => item.name !== action.payload.name)
+        var index = state.itemList.findIndex(item => item.item === action.payload.name)
         var myArray = [...state.itemList]
+        console.log(JSON.stringify(index))
         myArray[index].price = action.payload.price
         console.log(JSON.stringify(myArray))
         

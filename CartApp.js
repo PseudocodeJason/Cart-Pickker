@@ -20,9 +20,9 @@ function App({ itemList, AddItem, RemoveItem, ModifyItem, ShowApi, HideApi, apiL
   // API Things
   const Entry= ({item})=>{
     return <View style={styles.item}>
-    <Text>{item.Nation}</Text>
-    <Text>{item.Year}</Text>
-    <Text>{item.Population}</Text>
+    <Text>Nation :{item.Nation}</Text>
+    <Text>Year: {item.Year}</Text>
+    <Text>Population: {item.Population}</Text>
     
     </View>
   }
