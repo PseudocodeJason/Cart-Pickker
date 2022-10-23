@@ -1,7 +1,8 @@
-import { Text, View, StyleSheet, TextInput, Button, StatusBar, SafeAreaView, FlatList } from "react-native";
+import { Text, View, StyleSheet, TextInput, Button, StatusBar, FlatList,ScrollView } from "react-native";
 import { useState, useEffect } from "react";
 import { connect } from "react-redux";
 import { AddItem, RemoveItem, ModifyItem, ShowApi, HideApi } from './redux/actions/index'
+import Constants from 'expo-constants';
 
 function App({ itemList, AddItem, RemoveItem, ModifyItem, ShowApi, HideApi, apiList }) {
   const [item, setItem] = useState('')
@@ -18,13 +19,16 @@ function App({ itemList, AddItem, RemoveItem, ModifyItem, ShowApi, HideApi, apiL
 
 
   // API Things
-  const Entry= ({item})=>{
-    return <View style={styles.item}>
-    <Text>Nation :{item.Nation}</Text>
-    <Text>Year: {item.Year}</Text>
-    <Text>Population: {item.Population}</Text>
-    
-    </View>
+  const Entry = ({ item }) => {
+    return (
+
+      <View style={styles.item}>
+        <Text>Nation :{item.Nation}</Text>
+        <Text>Year: {item.Year}</Text>
+        <Text>Population: {item.Population}</Text>
+
+      </View>
+    )
   }
 
   const [data, setData] = useState([]);
@@ -35,33 +39,33 @@ function App({ itemList, AddItem, RemoveItem, ModifyItem, ShowApi, HideApi, apiL
   }, []);
 
   return (
-    
-    <SafeAreaView>
-      <View style={styles.container}>
-          <Button title="Show API" onPress={() => ShowApi(data)} />
-          <Button title="Hide API" onPress={() => HideApi()}/>
-        <View >
-          <Text >Item Name:</Text>
-          <TextInput
-            style={styles.input}
-            onChangeText={setItem}
-            value={item}
-          />
-        </View>
-        <View>
-          <Text>Price:</Text>
-          <TextInput style={styles.input} onChangeText={setPrice} value={price} />
-        </View>
-        <View>
-            <Button title="Add To Cart" onPress={() => AddItem(item, price)} />
-            <Button title="Remove Item" onPress={() => RemoveItem(item)}/>
-            <Button title="Modify Item " onPress={() => ModifyItem(item, price)}/>
-        </View>
-        <View style={styles.sep} />
-        <FlatList data={itemList} renderItem={ListRender}/>
-        <FlatList data={apiList} renderItem={Entry} />
+
+    <View style={styles.container}>
+      <View style={styles.buttons}>
+        <Button title="Show API" onPress={() => ShowApi(data)} />
+        <Button title="Hide API" onPress={() => HideApi()} />
       </View>
-    </SafeAreaView>
+      <View style={styles.textboxes}>
+        <Text >Item Name:</Text>
+        <TextInput
+          style={styles.input}
+          onChangeText={setItem}
+          value={item}
+        />
+        <Text>Price:</Text>
+        <TextInput style={styles.input} onChangeText={setPrice} value={price} />
+      </View>
+      <View style={styles.buttons} >
+        <Button title="Add To Cart" onPress={() => AddItem(item, price)} />
+        <Button title="Remove Item" onPress={() => RemoveItem(item)} />
+        <Button title="Modify Item" onPress={() => ModifyItem(item, price)} />
+      </View>
+      <View style={styles.sep} />
+      <View style={styles.lists}>
+        <FlatList data={itemList} renderItem={ListRender} />
+        <FlatList data={apiList} renderItem={Entry}/>
+      </View>
+    </View>
 
   );
 }
@@ -86,12 +90,30 @@ const styles = StyleSheet.create({
   sep: {
     height: StyleSheet.hairlineWidth * 2,
     backgroundColor: 'silver',
-    marginTop: 20,
+    margin: 10,
   },
   container: {
+    flex:1,
     padding: StyleSheet.hairlineWidth * 10,
-    paddingTop: StatusBar.currentHeight,
+    paddingTop: Constants.statusBarHeight,
+    maxHeight: "100%"
   },
+  textboxes: {
+    flex:2,
+    padding: StyleSheet.hairlineWidth * 10,
+    maxHeight: 150
+  },
+  buttons: {
+    flex:1,
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    backgroundColor: "deepskyblue",
+    flexwrap: "wrap",
+    maxHeight: 50
+  },
+  lists: {
+    flex: 5
+  }
 });
 
 const mapDispatch = { AddItem, RemoveItem, ModifyItem, ShowApi, HideApi };
